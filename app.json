@@ -1,13 +1,13 @@
 {
 	"expo": {
-		"name": "FitnessUp",
-		"slug": "FitnessUp",
+		"name": "Athrox",
+		"slug": "Athrox",
 		"version": "1.0.0",
 		"orientation": "portrait",
 
-		"scheme": "fitnessup",
+		"scheme": "athrox",
 
-		"icon": "./assets/icon.png",
+		"icon": "./assets/logo.png",
 
 		"userInterfaceStyle": "dark",
 
@@ -18,7 +18,7 @@
 		},
 
 		"ios": {
-			"bundleIdentifier": "com.yourname.fitnessup",
+			"bundleIdentifier": "com.yourname.athrox",
 			"supportsTablet": false
 		},
 
