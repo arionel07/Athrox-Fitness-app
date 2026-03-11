@@ -31,7 +31,7 @@ interface IWorkoutState {
 	error: string | null
 
 	// ── Действия: сессии ────────────────────────────────────────────
-	setSession: (session: IWorkoutSession[]) => void
+	setSessions: (session: IWorkoutSession[]) => void
 	addSession: (session: IWorkoutSession) => void
 	updateSession: (id: string, updates: Partial<IWorkoutSession>) => void
 	deleteSession: (id: string) => void
@@ -63,7 +63,7 @@ export const useWorkoutStore = create<IWorkoutState>(set => ({
 	...initialState,
 
 	// ── Загружаем все сессии из БД в store ──────────────────────────
-	setSession: sessions => set({ sessions }),
+	setSessions: sessions => set({ sessions }),
 	// ── Добавляем новую сессию в начало массива (новые сверху) ───────
 	addSession: session =>
 		set(state => ({

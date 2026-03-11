@@ -44,8 +44,7 @@ export type TCreateWorkoutDTO = Omit<
 	IWorkoutSession,
 	'id' | 'finishedAt' | 'exercises'
 > & {
-	exercises: Omit<IExercise, 'id' | 'sessionId' | 'sets'> &
-		{
-			sets: Omit<IWorkoutSet, 'id' | 'exerciseId'>[]
-		}[]
+	exercises: (Omit<IExercise, 'id' | 'sessionId' | 'sets'> & {
+		sets: Omit<IWorkoutSet, 'id' | 'exerciseId'>[]
+	})[]
 }
