@@ -93,6 +93,7 @@ export const Button = memo(
 					sizeStyles[size],
 					style
 				]}
+				{...props}
 			>
 				{isLoading ? (
 					<ActivityIndicator
