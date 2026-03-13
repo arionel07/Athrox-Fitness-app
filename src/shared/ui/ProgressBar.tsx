@@ -3,13 +3,13 @@
  * @description Прогресс-бар с анимацией заполнения.
  *
  * Оптимизация:
- * — Анимация через Reanimated (не JS thread)
- * — useEffect запускает анимацию только при изменении progress
+ * — onLayout получает реальную ширину контейнера в пикселях
+ * — Reanimated анимирует в пикселях — надёжно на всех устройствах
  * — memo предотвращает лишние ре-рендеры
  */
 
-import { memo, useEffect } from 'react'
-import { View } from 'react-native'
+import { memo, useEffect, useState } from 'react'
+import { LayoutChangeEvent, View } from 'react-native'
 import Animated, {
 	Easing,
 	useAnimatedStyle,
@@ -20,8 +20,7 @@ import { Colors, Radius, Spacing } from '../theme/tokens.theme'
 import { Text } from './Text'
 
 interface IProgressBarProps {
-	// Значение от 0 до 1 (0.7 = 70%)
-	progress: number
+	progress: number // 0 до 1
 	label?: string
 	valueLabel?: string // текст справа ("1800 / 2200 ккал")
 	color?: string
@@ -36,22 +35,32 @@ export const ProgressBar = memo(
 		label,
 		valueLabel
 	}: IProgressBarProps) => {
-		// Clamp: значение всегда между 0 и 1
+		// Clamp значение между 0 и 1
 		const clampedProgress = Math.min(1, Math.max(0, progress))
 
-		// Shared value живёт на UI thread — анимация без JS
-		const width = useSharedValue(0)
+		// Реальная ширина контейнера в пикселях
+		const [containerWidth, setContainerWidth] = useState(0)
 
+		// Анимированное значение ширины заполнения
+		const animatedWidth = useSharedValue(0)
+
+		// Получаем ширину контейнера после рендера
+		const onLayout = (e: LayoutChangeEvent) => {
+			setContainerWidth(e.nativeEvent.layout.width)
+		}
+
+		// Запускаем анимацию когда знаем ширину и progress
 		useEffect(() => {
-			// Плавное заполнение за 600ms при монтировании или изменении
-			width.value = withTiming(clampedProgress, {
+			if (containerWidth === 0) return
+
+			animatedWidth.value = withTiming(containerWidth * clampedProgress, {
 				duration: 600,
 				easing: Easing.out(Easing.cubic)
 			})
-		}, [clampedProgress])
+		}, [clampedProgress, containerWidth])
 
 		const animatedStyle = useAnimatedStyle(() => ({
-			width: `${width.value * 100}%`
+			width: animatedWidth.value
 		}))
 
 		return (
@@ -62,6 +71,7 @@ export const ProgressBar = memo(
 						style={{
 							flexDirection: 'row',
 							justifyContent: 'space-between',
+							alignItems: 'center',
 							marginBottom: Spacing.xs
 						}}
 					>
@@ -74,30 +84,31 @@ export const ProgressBar = memo(
 								{valueLabel}
 							</Text>
 						)}
-
-						{/* Трек */}
-						<View
-							style={{
-								height,
-								backgroundColor: Colors.border,
-								borderRadius: Radius.full,
-								overflow: 'hidden'
-							}}
-						>
-							{/* Заполнение с анимацией */}
-							<Animated.View
-								style={[
-									{
-										height: '100%',
-										backgroundColor: color,
-										borderRadius: Radius.full
-									},
-									animatedStyle
-								]}
-							/>
-						</View>
 					</View>
 				)}
+
+				{/* Трек */}
+				<View
+					onLayout={onLayout}
+					style={{
+						height,
+						backgroundColor: Colors.border,
+						borderRadius: Radius.full,
+						overflow: 'hidden'
+					}}
+				>
+					{/* Заполнение */}
+					<Animated.View
+						style={[
+							{
+								height: '100%',
+								backgroundColor: color,
+								borderRadius: Radius.full
+							},
+							animatedStyle
+						]}
+					/>
+				</View>
 			</View>
 		)
 	}

@@ -25,9 +25,8 @@ export const CREATE_WORKOUT_SESSIONS_TABLE = `
 
 // Индекс для быстрой фильтрации по дате (Weekly Report, экран Прогресса)
 export const CREATE_WORKOUT_SESSIONS_DATE_INDEX = `
-	CREATE INDEX IF NOT EXISTS idx_workout_sessions_started_at (
-	ON workout_sessions(started_at)
-	)
+  CREATE INDEX IF NOT EXISTS idx_workout_sessions_started_at
+  ON workout_sessions(started_at);
 `
 
 export const CREATE_EXERCISES_TABLE = `
@@ -41,9 +40,8 @@ export const CREATE_EXERCISES_TABLE = `
 
 // Индекс для быстрого получения упражнений конкретной тренировки
 export const CREATE_EXERCISES_SESSION_INDEX = `
-	CREATE INDEX OF NOT EXISTS idx_exercise_session_id (
-		ON exercises(session_id);
-	)
+  CREATE INDEX IF NOT EXISTS idx_exercises_session_id
+  ON exercises(session_id);
 `
 
 export const CREATE_WORKOUT_SETS_TABLE = `
