@@ -71,7 +71,7 @@ export const useNutrition = () => {
 	 * В БД запись создаётся только когда добавляется первый продукт.
 	 * @param date — "YYYY-MM-DD"
 	 */
-	const loadDay = useCallback(
+	const loadDays = useCallback(
 		async (date: string): Promise<void> => {
 			setLoading(true)
 			setError(null)
@@ -342,7 +342,7 @@ export const useNutrition = () => {
 	)
 
 	return {
-		loadDay,
+		loadDays,
 		addMealToDay,
 		addFood,
 		removeFood,
