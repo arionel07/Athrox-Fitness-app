@@ -84,12 +84,7 @@ export const SetRow = memo(
 				</View>
 
 				{/* Разделитель */}
-				<Text
-					variant="muted"
-					color={Colors.muted}
-				>
-					×
-				</Text>
+				<Text color={Colors.muted}>×</Text>
 				{/* Повторения */}
 				<View style={{ flex: 1, alignItems: 'center' }}>
 					<TextInput

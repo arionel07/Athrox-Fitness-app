@@ -180,6 +180,21 @@ export const CREATE_WEEKLY_REPORTS_TABLE = `
   );
 `
 
+// ─── Профиль пользователя ─────────────────────────────────────────
+
+export const CREATE_USER_PROFILE_TABLE = `
+  CREATE TABLE IF NOT EXISTS user_profile (
+    id                      TEXT PRIMARY KEY,
+    name                    TEXT NOT NULL DEFAULT 'Атлет',
+    weight_goal             REAL NOT NULL DEFAULT 80,
+    calorie_goal            INTEGER NOT NULL DEFAULT 2400,
+    protein_goal            INTEGER NOT NULL DEFAULT 160,
+    workouts_per_week_goal  INTEGER NOT NULL DEFAULT 4,
+    created_at              TEXT NOT NULL,
+    updated_at              TEXT NOT NULL
+  )
+`
+
 // ─── Все таблицы и индексы списком ────────────────────────────────
 // Используется в migration.ts для создания БД в правильном порядке
 // Порядок важен: сначала родительские таблицы, потом дочерние (REFERENCES)
@@ -207,5 +222,6 @@ export const ALL_TABLES = [
 	CREATE_PROGRESS_PHOTOS_TABLE,
 	CREATE_PROGRESS_PHOTOS_DATE_INDEX,
 
-	CREATE_WEEKLY_REPORTS_TABLE
+	CREATE_WEEKLY_REPORTS_TABLE,
+	CREATE_USER_PROFILE_TABLE
 ]
