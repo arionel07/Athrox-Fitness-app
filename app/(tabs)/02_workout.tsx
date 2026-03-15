@@ -27,6 +27,7 @@ import {
 	StretchingIcon
 } from '../../src/shared/ui/Icons'
 import { Text } from '../../src/shared/ui/Text'
+import { RestTimer } from '../../src/widgets/RestTimer/RestTimer'
 import { ExerciseCard } from '../../src/widgets/WorkoutCard/ExerciseCard'
 
 // ─── Иконки для типов тренировок ──────────────────────────────────
@@ -364,6 +365,7 @@ export default function WorkoutScreen() {
 					/>
 				</ScrollView>
 			</KeyboardAvoidingView>
+			<RestTimer />
 		</SafeAreaView>
 	)
 }

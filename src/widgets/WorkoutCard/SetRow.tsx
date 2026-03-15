@@ -9,6 +9,7 @@
 
 import { memo } from 'react'
 import { TextInput, TouchableOpacity, View } from 'react-native'
+import { useTimerStore } from '../../shared/store/timer.store'
 import { Colors, Radius, Spacing } from '../../shared/theme/tokens.theme'
 import { Text } from '../../shared/ui/Text'
 
@@ -35,6 +36,7 @@ export const SetRow = memo(
 		onToggleCompleted,
 		onDelete
 	}: ISetRowProps) => {
+		const showTimer = useTimerStore(s => s.show)
 		return (
 			<View
 				style={{
@@ -116,7 +118,14 @@ export const SetRow = memo(
 				</View>
 				{/* Чекбокс выполнения */}
 				<TouchableOpacity
-					onPress={onToggleCompleted}
+					onPress={() => {
+						onToggleCompleted()
+						// ✅ Таймер только когда переходим из !completed → completed
+						if (!completed) {
+							showTimer(90)
+						}
+						// если completed → !completed (снимаем галку) — таймер не запускаем
+					}}
 					activeOpacity={0.7}
 					style={{
 						width: 28,
