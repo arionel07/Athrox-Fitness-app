@@ -188,29 +188,43 @@ export const SleepLogger = memo(({ onSave, isSaving }: SleepLoggerProps) => {
 			<View style={{ gap: Spacing.xs }}>
 				<Text variant="label">Качество сна</Text>
 				<View style={{ flexDirection: 'row', gap: Spacing.sm }}>
-					{[1, 2, 3, 4, 5].map(q => (
-						<TouchableOpacity
-							key={q}
-							onPress={() => setQuality(q)}
-							style={{
-								flex: 1,
-								paddingVertical: Spacing.sm,
-								borderRadius: Radius.sm,
-								borderWidth: 1,
-								borderColor: quality >= q ? Colors.primary : Colors.border,
-								backgroundColor:
-									quality >= q ? 'rgba(0,114,245,0.15)' : 'transparent',
-								alignItems: 'center'
-							}}
-						>
-							<Text
-								variant="metricTiny"
-								color={quality >= q ? Colors.primary : Colors.muted}
+					{[1, 2, 3, 4, 5].map(q => {
+						const isActive = quality >= q
+						const dotColor =
+							q <= 2 ? Colors.danger : q === 3 ? Colors.warning : Colors.success
+						return (
+							<TouchableOpacity
+								key={q}
+								onPress={() => setQuality(q)}
+								style={{
+									flex: 1,
+									paddingVertical: Spacing.sm,
+									borderRadius: Radius.sm,
+									borderWidth: 1,
+									borderColor: isActive ? dotColor : Colors.border,
+									backgroundColor: isActive ? `${dotColor}22` : 'transparent',
+									alignItems: 'center',
+									gap: 4
+								}}
 							>
-								{['😴', '😕', '😐', '🙂', '😊'][q - 1]}
-							</Text>
-						</TouchableOpacity>
-					))}
+								<View
+									style={{
+										width: 8,
+										height: 8,
+										borderRadius: 4,
+										backgroundColor: isActive ? dotColor : Colors.border
+									}}
+								>
+									<Text
+										variant="metricTiny"
+										color={isActive ? dotColor : Colors.muted}
+									>
+										{q}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						)
+					})}
 				</View>
 			</View>
 

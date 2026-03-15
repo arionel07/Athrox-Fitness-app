@@ -3,6 +3,7 @@
  * @description Экран записи тренировки — в разработке.
  */
 
+import { router } from 'expo-router'
 import { useCallback, useState } from 'react'
 import {
 	Alert,
@@ -212,17 +213,36 @@ export default function WorkoutScreen() {
 						}}
 					>
 						<Text variant="h2">Новая тренировка</Text>
-						<TouchableOpacity
-							onPress={handleReset}
-							activeOpacity={0.7}
+						<View
+							style={{
+								flexDirection: 'row',
+								gap: Spacing.md,
+								alignItems: 'center'
+							}}
 						>
-							<Text
-								variant="bodySmall"
-								color={Colors.muted}
+							<TouchableOpacity
+								onPress={() => router.push('/workout-history')}
+								activeOpacity={0.7}
 							>
-								Сбросить
-							</Text>
-						</TouchableOpacity>
+								<Text
+									variant="bodySmall"
+									color={Colors.muted}
+								>
+									История
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								onPress={handleReset}
+								activeOpacity={0.7}
+							>
+								<Text
+									variant="bodySmall"
+									color={Colors.muted}
+								>
+									Сбросить
+								</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
 
 					{/* ── Тип тренировки ──────────────────────────────────── */}
