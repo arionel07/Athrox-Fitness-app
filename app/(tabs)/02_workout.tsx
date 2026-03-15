@@ -3,8 +3,8 @@
  * @description Экран записи тренировки — в разработке.
  */
 
-import { router } from 'expo-router'
-import { useCallback, useState } from 'react'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
 import {
 	Alert,
 	KeyboardAvoidingView,
@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { TWorkoutType } from '../../src/entities/workout/workout.type'
 import { generateId } from '../../src/shared/hooks/useId.hook'
 import { useWorkouts } from '../../src/shared/hooks/useWorkouts.hook'
+import { useTemplateStore } from '../../src/shared/store/template.store'
 import { Colors, Spacing } from '../../src/shared/theme/tokens.theme'
 import { Button } from '../../src/shared/ui/Button'
 import { Card } from '../../src/shared/ui/Card'
@@ -59,6 +60,9 @@ interface ILocalExercise {
 
 export default function WorkoutScreen() {
 	const { createSession } = useWorkouts()
+
+	const { templateId } = useLocalSearchParams<{ templateId?: string }>()
+	const templates = useTemplateStore(s => s.templates)
 
 	// ── State ──────────────────────────────────────────────────────
 	const [workoutType, setWorkoutType] = useState<TWorkoutType>('strength')
@@ -185,6 +189,31 @@ export default function WorkoutScreen() {
 		month: 'long'
 	})
 
+	// Загружаем шаблон когда templateId меняется
+	useEffect(() => {
+		if (!templateId) return
+		const template = templates.find(t => t.id === templateId)
+		if (!template) return
+
+		setWorkoutType(template.type) // ← не забываем тип
+
+		setExercises(
+			template.exercises.map(ex => ({
+				id: generateId(),
+				name: ex.name,
+				sets:
+					ex.sets.length > 0
+						? ex.sets.map(s => ({
+								id: generateId(),
+								weight: s.weight ? String(s.weight) : '',
+								reps: s.reps ? String(s.reps) : '',
+								completed: false
+							}))
+						: [{ id: generateId(), weight: '', reps: '', completed: false }]
+			}))
+		)
+	}, [templateId, templates])
+
 	return (
 		<SafeAreaView
 			style={{ flex: 1, backgroundColor: Colors.background }}
@@ -206,21 +235,20 @@ export default function WorkoutScreen() {
 					keyboardShouldPersistTaps="handled"
 				>
 					{/* ── Header ──────────────────────────────────────────── */}
-					<View
-						style={{
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							alignItems: 'center'
-						}}
-					>
+					<View style={{ gap: Spacing.sm }}>
 						<Text variant="h2">Новая тренировка</Text>
-						<View
-							style={{
-								flexDirection: 'row',
-								gap: Spacing.md,
-								alignItems: 'center'
-							}}
-						>
+						<View style={{ flexDirection: 'row', gap: Spacing.md }}>
+							<TouchableOpacity
+								onPress={() => router.push('/workout-templates')}
+								activeOpacity={0.7}
+							>
+								<Text
+									variant="bodySmall"
+									color={Colors.muted}
+								>
+									Шаблоны
+								</Text>
+							</TouchableOpacity>
 							<TouchableOpacity
 								onPress={() => router.push('/workout-history')}
 								activeOpacity={0.7}
@@ -318,6 +346,8 @@ export default function WorkoutScreen() {
 							<ExerciseCard
 								key={ex.id}
 								index={index}
+								initialName={ex.name}
+								initialSets={ex.sets}
 								onUpdate={(name, sets) =>
 									handleUpdateExercise(ex.id, name, sets)
 								}

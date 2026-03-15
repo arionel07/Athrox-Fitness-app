@@ -26,19 +26,28 @@ interface ILocalSet {
 	completed: boolean
 }
 
-interface IExerciseCardProps {
+interface ExerciseCardProps {
 	index: number
-	onUpdate: (name: string, local: ILocalSet[]) => void
+	onUpdate: (name: string, sets: ILocalSet[]) => void
 	onDelete: () => void
+	initialName?: string
+	initialSets?: ILocalSet[]
 }
 
 export const ExerciseCard = memo(
-	({ index, onUpdate, onDelete }: IExerciseCardProps) => {
-		const [name, setName] = useState('')
-		const [sets, setSets] = useState<ILocalSet[]>([
-			// Начинаем с одного пустого подхода
-			{ id: generateId(), weight: '', reps: '', completed: false }
-		])
+	({
+		index,
+		onUpdate,
+		onDelete,
+		initialName = '',
+		initialSets
+	}: ExerciseCardProps) => {
+		const [name, setName] = useState(initialName) // ← используем initialName
+		const [sets, setSets] = useState<ILocalSet[]>(
+			initialSets ?? [
+				{ id: generateId(), weight: '', reps: '', completed: false }
+			]
+		)
 
 		// ── Уведомляем родителя через useEffect — не во время рендера ───
 		useEffect(() => {
@@ -152,7 +161,7 @@ export const ExerciseCard = memo(
 						variant="label"
 						style={{ flex: 1, textAlign: 'center' }}
 					>
-						Reps
+						Повт
 					</Text>
 					{/* Место под чекбокс и удаление */}
 					<View style={{ width: 28 + 28 + Spacing.sm }} />

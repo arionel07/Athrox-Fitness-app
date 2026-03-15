@@ -219,7 +219,7 @@ export default function ProgressScreen() {
 				</View>
 
 				{/* ── Фото прогресса ────────────────────────────────── */}
-				<View style={{ gap: Spacing.sm }}>
+				<View style={{ gap: Spacing.lg }}>
 					<Text variant="label">Фото прогресса</Text>
 
 					<View style={{ flexDirection: 'row', gap: Spacing.sm }}>

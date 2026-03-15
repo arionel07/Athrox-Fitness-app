@@ -195,6 +195,36 @@ export const CREATE_USER_PROFILE_TABLE = `
   )
 `
 
+// ─── Шаблоны тренировок ───────────────────────────────────────────
+
+export const CREATE_WORKOUT_TEMPLATES_TABLE = `
+  CREATE TABLE IF NOT EXISTS workout_templates (
+    id         TEXT PRIMARY KEY,
+    name       TEXT NOT NULL,
+    type       TEXT NOT NULL CHECK(type IN ('strength','cardio','stretching')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )
+`
+
+export const CREATE_TEMPLATE_EXERCISES_TABLE = `
+  CREATE TABLE IF NOT EXISTS template_exercises (
+    id          TEXT PRIMARY KEY,
+    template_id TEXT NOT NULL REFERENCES workout_templates(id) ON DELETE CASCADE,
+    name        TEXT NOT NULL,
+    sort_order  INTEGER NOT NULL DEFAULT 0
+  )
+`
+
+export const CREATE_TEMPLATE_SETS_TABLE = `
+  CREATE TABLE IF NOT EXISTS template_sets (
+    id          TEXT PRIMARY KEY,
+    exercise_id TEXT NOT NULL REFERENCES template_exercises(id) ON DELETE CASCADE,
+    weight      REAL NOT NULL DEFAULT 0,
+    reps        INTEGER NOT NULL DEFAULT 0
+  )
+`
+
 // ─── Все таблицы и индексы списком ────────────────────────────────
 // Используется в migration.ts для создания БД в правильном порядке
 // Порядок важен: сначала родительские таблицы, потом дочерние (REFERENCES)
@@ -223,5 +253,10 @@ export const ALL_TABLES = [
 	CREATE_PROGRESS_PHOTOS_DATE_INDEX,
 
 	CREATE_WEEKLY_REPORTS_TABLE,
-	CREATE_USER_PROFILE_TABLE
+	CREATE_USER_PROFILE_TABLE,
+
+	// Шаблоны
+	CREATE_WORKOUT_TEMPLATES_TABLE,
+	CREATE_TEMPLATE_EXERCISES_TABLE,
+	CREATE_TEMPLATE_SETS_TABLE
 ]

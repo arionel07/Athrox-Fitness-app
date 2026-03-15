@@ -4,23 +4,26 @@
 		"slug": "Athrox",
 		"version": "1.0.0",
 		"orientation": "portrait",
-
 		"scheme": "athrox",
-
 		"icon": "./assets/icon.png",
-
 		"userInterfaceStyle": "dark",
 		"ios": {
-			"bundleIdentifier": "com.yourname.athrox",
+			"bundleIdentifier": "com.arionel.athrox",
 			"supportsTablet": false
 		},
-
 		"plugins": [
 			"expo-router",
 			"expo-sqlite",
 			"expo-sharing",
 			"expo-font",
-			"expo-media-library"
+			"expo-media-library",
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "Athrox использует галерею для фото прогресса",
+					"cameraPermission": "Athrox использует камеру для фото прогресса"
+				}
+			]
 		]
 	}
 }
